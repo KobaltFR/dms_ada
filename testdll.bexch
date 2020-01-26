@@ -1,0 +1,22 @@
+[GENERATED OBJECT FILE]
+b__testdll.o
+[PROJECT FILES]
+/home/n7student/Documents/GPS Projects/Projet_ADA/projet_ada.gpr
+20200120160352
+[BOUND OBJECT FILES]
+/home/n7student/Documents/GPS Projects/Projet_ADA/p_gen_doublelinkedlist.o
+/home/n7student/Documents/GPS Projects/Projet_ADA/testdll.o
+[GENERATED SOURCE FILES]
+b__testdll.ads
+b__testdll.adb
+b__testdll.ali
+[RESULTING OPTIONS]
+-L/home/n7student/Documents/GPS Projects/Projet_ADA/
+-L/home/n7student/Documents/GPS Projects/Projet_ADA/
+-L/usr/lib/gcc/x86_64-linux-gnu/7/adalib/
+-shared
+-shared-libgcc
+-lgnat-7
+[RUN PATH OPTION]
+/usr/lib/gcc/x86_64-linux-gnu/7/adalib/
+/usr/lib

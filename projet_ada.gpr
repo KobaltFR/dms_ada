@@ -1,0 +1,6 @@
+project Projet_ADA is
+
+   for Main use ("main_p_datastruct_tree.adb");
+
+end Projet_ADA;
+
