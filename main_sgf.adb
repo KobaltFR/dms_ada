@@ -40,19 +40,16 @@ procedure main_sgf is
 
    procedure commandPrompt is
        command : Unbounded_String;
-       argsList, argsList2 : US_List.DoubleLinkedList_Pointer;
+       argsList : US_DLL.DoubleLinkedList_Pointer;
    begin
        loop
          Put("> ");
          command := To_Unbounded_String(Get_Line);
-         argsList := splitCommand(' ', command);
-         US_List.display(argsList);
-         Put("First element : ");
-         Put(To_String(US_List.get_first_element(argsList)));
+         argsList := split_command(' ', command);
+         US_DLL.display(argsList);
+         Put("Length : ");
+         Put(US_DLL.length(argsList), width => 2);
          New_Line;
-         argsList2 := splitCommand('/', US_List.get_element(2, argsList));
-         Put_Line("Splitted path : ");
-         US_List.display(argsList2);
          exit when To_String(command) = "exit";
        end loop;
    end commandPrompt;

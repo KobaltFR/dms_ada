@@ -38,11 +38,10 @@ package body p_gen_doublelinkedlist is
       out_cell := in_cell;
    end set_dll_cell;
 
-
-   function init return DoubleLinkedList_Pointer is
+   function set_null_cell return DoubleLinkedList_Pointer is
    begin
-      return new DoubleLinkedList_Cell;
-   end init;
+      return null;
+   end set_null_cell;
 
    function is_empty(list : IN DoubleLinkedList_Pointer) return Boolean is
    begin
@@ -58,15 +57,10 @@ package body p_gen_doublelinkedlist is
       end if;
    end length;
 
-   function get_first_element(list : IN DoubleLinkedList_Pointer) return T_Value is
-      tmp : DoubleLinkedList_Pointer;
+   function is_unique(elem : IN T_Value; list : IN DoubleLinkedList_Pointer) return Boolean is
    begin
-      tmp := list;
-      while tmp.previous /= null loop
-         tmp := tmp.previous;
-      end loop;
-      return tmp.value;
-   end get_first_element;
+      return find(elem, list) = null;
+   end is_unique;
 
    procedure insert_at_start(elem : IN T_Value; list : IN OUT DoubleLinkedList_Pointer) is
       tmp : DoubleLinkedList_Pointer;
@@ -96,25 +90,9 @@ package body p_gen_doublelinkedlist is
       end if;
    end insert_at_end;
 
-   procedure insert_before(elem : IN T_Value; delimiter : IN T_Value; list : IN OUT DoubleLinkedList_Pointer) is
+   procedure insert_after(elem : IN T_Value; delimiter : IN T_Value; list : IN OUT DoubleLinkedList_Pointer) is
       tmp : DoubleLinkedList_Pointer;
    begin
-      if is_empty(list) then
-         list := new DoubleLinkedList_Cell'(elem, null, null);
-      else
-         tmp := find(delimiter,list);
-         if tmp.previous = null then
-            tmp.previous := new DoubleLinkedList_Cell'(elem, null, tmp);
-         else
-            tmp.previous := new DoubleLinkedList_Cell'(elem, tmp.previous, tmp);
-            tmp.previous.previous.next := tmp.previous;
-         end if;
-      end if;
-   end insert_before;
-
-    procedure insert_after(elem : IN T_Value; delimiter : IN T_Value; list : IN OUT DoubleLinkedList_Pointer) is
-      tmp : DoubleLinkedList_Pointer;
-     begin
       if is_empty(list) then
          list := new DoubleLinkedList_Cell'(elem, null, null);
       else
@@ -126,7 +104,7 @@ package body p_gen_doublelinkedlist is
             tmp.next.next.previous := tmp.next;
          end if;
       end if;
-    end insert_after;
+   end insert_after;
 
    function find(elem : IN T_Value; list : IN DoubleLinkedList_Pointer) return DoubleLinkedList_Pointer is
       tmp : DoubleLinkedList_Pointer := list;
@@ -137,23 +115,25 @@ package body p_gen_doublelinkedlist is
          return null;
       end if;
 
-      while tmp.next /= null and then not element_found loop
+      while not element_found and then tmp /= null loop
          if tmp.value = elem then
-            element_found := true;
+            element_found := True;
          else
             tmp := tmp.next;
          end if;
       end loop;
 
-      tmp := list;
+      if not element_found then
+         tmp := list;
 
-      while tmp /= null and then not element_found loop
-         if tmp.value = elem then
-            element_found := true;
-         else
-            tmp := tmp.previous;
-         end if;
-      end loop;
+         while not element_found and then tmp /= null loop
+            if tmp.value = elem then
+               element_found := True;
+            else
+               tmp := tmp.previous;
+            end if;
+         end loop;
+      end if;
 
       return tmp;
 

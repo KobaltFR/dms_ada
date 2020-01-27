@@ -6,8 +6,9 @@ package body p_commandfuncs is
    function split_command(splitter : IN Character; command : IN unbounded_string) return DoubleLinkedList_Pointer is
       argument : Unbounded_String;
       lcmd : Integer;
-      low, high : Integer := 0;
-      args_list : DoubleLinkedList_Pointer := init;
+      low : Integer := 0;
+      high : Integer := 0;
+      args_list : DoubleLinkedList_Pointer;
       splitter_found : Boolean := False;
    begin
       lcmd := Length(command);
@@ -35,7 +36,7 @@ package body p_commandfuncs is
    procedure interpretCommand(argsList : IN DoubleLinkedList_Pointer) is
       cmd : Unbounded_String;
    begin
-      cmd := get_first_element(argsList);
+      cmd := get_value(argsList);
       if cmd = To_Unbounded_String("cd") then
           null;--cd(cmdTab(2));
       elsif cmd = To_Unbounded_String("touch") then

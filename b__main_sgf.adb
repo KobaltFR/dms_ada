@@ -27,8 +27,8 @@ package body ada_main is
    E051 : Short_Integer; pragma Import (Ada, E051, "ada__text_io_E");
    E128 : Short_Integer; pragma Import (Ada, E128, "ada__strings__maps_E");
    E124 : Short_Integer; pragma Import (Ada, E124, "ada__strings__unbounded_E");
-   E161 : Short_Integer; pragma Import (Ada, E161, "system__pool_global_E");
-   E159 : Short_Integer; pragma Import (Ada, E159, "p_gen_chainedlist_E");
+   E165 : Short_Integer; pragma Import (Ada, E165, "system__pool_global_E");
+   E159 : Short_Integer; pragma Import (Ada, E159, "p_gen_doublelinkedlist_E");
    E157 : Short_Integer; pragma Import (Ada, E157, "p_commandfuncs_E");
 
    Local_Priority_Specific_Dispatching : constant String := "";
@@ -38,54 +38,47 @@ package body ada_main is
 
    procedure finalize_library is
    begin
-      E157 := E157 - 1;
+      E165 := E165 - 1;
       declare
          procedure F1;
-         pragma Import (Ada, F1, "p_commandfuncs__finalize_spec");
+         pragma Import (Ada, F1, "system__pool_global__finalize_spec");
       begin
          F1;
       end;
-      E161 := E161 - 1;
+      E124 := E124 - 1;
       declare
          procedure F2;
-         pragma Import (Ada, F2, "system__pool_global__finalize_spec");
+         pragma Import (Ada, F2, "ada__strings__unbounded__finalize_spec");
       begin
          F2;
       end;
-      E124 := E124 - 1;
+      E051 := E051 - 1;
       declare
          procedure F3;
-         pragma Import (Ada, F3, "ada__strings__unbounded__finalize_spec");
+         pragma Import (Ada, F3, "ada__text_io__finalize_spec");
       begin
          F3;
       end;
-      E051 := E051 - 1;
+      E138 := E138 - 1;
       declare
          procedure F4;
-         pragma Import (Ada, F4, "ada__text_io__finalize_spec");
+         pragma Import (Ada, F4, "system__storage_pools__subpools__finalize_spec");
       begin
          F4;
       end;
-      E138 := E138 - 1;
+      E140 := E140 - 1;
       declare
          procedure F5;
-         pragma Import (Ada, F5, "system__storage_pools__subpools__finalize_spec");
+         pragma Import (Ada, F5, "system__finalization_masters__finalize_spec");
       begin
          F5;
       end;
-      E140 := E140 - 1;
       declare
          procedure F6;
-         pragma Import (Ada, F6, "system__finalization_masters__finalize_spec");
-      begin
-         F6;
-      end;
-      declare
-         procedure F7;
-         pragma Import (Ada, F7, "system__file_io__finalize_body");
+         pragma Import (Ada, F6, "system__file_io__finalize_body");
       begin
          E072 := E072 - 1;
-         F7;
+         F6;
       end;
       declare
          procedure Reraise_Library_Exception_If_Any;
@@ -223,7 +216,7 @@ package body ada_main is
       Ada.Strings.Unbounded'Elab_Spec;
       E124 := E124 + 1;
       System.Pool_Global'Elab_Spec;
-      E161 := E161 + 1;
+      E165 := E165 + 1;
       E159 := E159 + 1;
       p_commandfuncs'elab_spec;
       E157 := E157 + 1;
@@ -262,7 +255,7 @@ package body ada_main is
    end;
 
 --  BEGIN Object file/option list
-   --   /home/n7student/Documents/GPS Projects/Projet_ADA/p_gen_chainedlist.o
+   --   /home/n7student/Documents/GPS Projects/Projet_ADA/p_gen_doublelinkedlist.o
    --   /home/n7student/Documents/GPS Projects/Projet_ADA/p_commandfuncs.o
    --   /home/n7student/Documents/GPS Projects/Projet_ADA/main_sgf.o
    --   -L/home/n7student/Documents/GPS Projects/Projet_ADA/

@@ -1,5 +1,5 @@
-with Ada.Strings.unbounded, p_metadata, p_gen_doublelinkedlist;
-use Ada.Strings.unbounded, p_metadata;
+with Ada.Strings.unbounded, p_metadata, p_commandfuncs, p_gen_doublelinkedlist;
+use Ada.Strings.unbounded, p_metadata, p_commandfuncs;
 
 package p_datastruct_tree is
 
@@ -25,9 +25,10 @@ package p_datastruct_tree is
    function init return Tree_Node_Pointer;
    function is_empty(node : IN Tree_Node_Pointer) return Boolean;
    procedure insert(path_to_node : IN Unbounded_String; data : IN Metadata; current_node : IN OUT Tree_Node_Pointer);
-   function get_node(path_to_node : IN Unbounded_String; current_node : IN Tree_Node_Pointer) return Tree_Node_Pointer;
+   function get_node(path_to_node : IN US_DLL.DoubleLinkedList_Pointer; current_node : IN Tree_Node_Pointer) return Tree_Node_Pointer;
    procedure delete(path_to_node : IN Unbounded_String; current_node : IN OUT Tree_Node_Pointer);
    procedure display(current_node : IN Tree_Node_Pointer; space: IN Integer := 0);
+   function find_child(element : IN Unbounded_String; current_node : IN Tree_Node_Pointer) return TN_DLL.DoubleLinkedList_Pointer;
 
 private
 
@@ -38,6 +39,7 @@ private
       child_node : TN_DLL.DoubleLinkedList_Pointer;
    end record;
 
-   function alphabetical_insert_after(name : IN Unbounded_String; dll : IN TN_DLL.DoubleLinkedList_Pointer) return TN_DLL.DoubleLinkedList_Pointer;
+   function get_node_for_alphabetical_insert(name : IN Unbounded_String; dll : IN TN_DLL.DoubleLinkedList_Pointer) return TN_DLL.DoubleLinkedList_Pointer;
+   procedure alphabetical_insert(node_to_insert : IN Tree_Node_Pointer; dll : IN OUT TN_DLL.DoubleLinkedList_Pointer);
 
 end p_datastruct_tree;
