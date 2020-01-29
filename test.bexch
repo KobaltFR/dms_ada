@@ -1,16 +1,17 @@
 [GENERATED OBJECT FILE]
-b__main_sgf.o
+b__test.o
 [PROJECT FILES]
 /home/n7student/Documents/GPS Projects/Projet_ADA/projet_ada.gpr
-20200128072111
+20200129080405
 [BOUND OBJECT FILES]
 /home/n7student/Documents/GPS Projects/Projet_ADA/p_gen_doublelinkedlist.o
 /home/n7student/Documents/GPS Projects/Projet_ADA/p_commandfuncs.o
-/home/n7student/Documents/GPS Projects/Projet_ADA/main_sgf.o
+/home/n7student/Documents/GPS Projects/Projet_ADA/p_metadata.o
+/home/n7student/Documents/GPS Projects/Projet_ADA/test.o
 [GENERATED SOURCE FILES]
-b__main_sgf.ads
-b__main_sgf.adb
-b__main_sgf.ali
+b__test.ads
+b__test.adb
+b__test.ali
 [RESULTING OPTIONS]
 -L/home/n7student/Documents/GPS Projects/Projet_ADA/
 -L/home/n7student/Documents/GPS Projects/Projet_ADA/

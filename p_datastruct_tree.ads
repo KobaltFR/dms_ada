@@ -12,6 +12,9 @@ package p_datastruct_tree is
    package TN_DLL is new p_gen_doublelinkedlist(T_Value => Tree_Node_Pointer, "=" => equals, image => print);
    use TN_DLL;
 
+   element_not_found : Exception;
+   not_unique_element : Exception;
+
    function get_node_name(node : IN Tree_Node_Pointer) return Unbounded_String;
    procedure set_node_name(name : IN Unbounded_String; node : IN OUT Tree_Node_Pointer);
    function get_metadata(node : IN Tree_Node_Pointer) return Metadata;
@@ -26,9 +29,11 @@ package p_datastruct_tree is
    function is_empty(node : IN Tree_Node_Pointer) return Boolean;
    procedure insert(path_to_node : IN Unbounded_String; data : IN Metadata; current_node : IN OUT Tree_Node_Pointer);
    function get_node(path_to_node : IN US_DLL.DoubleLinkedList_Pointer; current_node : IN Tree_Node_Pointer) return Tree_Node_Pointer;
-   procedure delete(path_to_node : IN Unbounded_String; current_node : IN OUT Tree_Node_Pointer);
-   procedure display(current_node : IN Tree_Node_Pointer; space: IN Integer := 0);
+   procedure delete(path_to_node : IN US_DLL.DoubleLinkedList_Pointer; current_node : IN OUT Tree_Node_Pointer);
+   procedure display(current_node : IN Tree_Node_Pointer);
    function find_child(element : IN Unbounded_String; current_node : IN Tree_Node_Pointer) return TN_DLL.DoubleLinkedList_Pointer;
+   function is_unique(name : IN Unbounded_String; children : IN TN_DLL.DoubleLinkedList_Pointer) return Boolean;
+   procedure go_to_root(current_node : IN OUT Tree_Node_Pointer);
 
 private
 

@@ -43,6 +43,30 @@ package body p_gen_doublelinkedlist is
       return null;
    end set_null_cell;
 
+   function get_first(list : IN DoubleLinkedList_Pointer) return DoubleLinkedList_Pointer is
+      tmp : DoubleLinkedList_Pointer := list;
+   begin
+
+      while not is_empty(get_previous(tmp)) loop
+         set_dll_cell(tmp, get_previous(tmp));
+      end loop;
+
+      return tmp;
+
+   end get_first;
+
+   function get_last(list : IN DoubleLinkedList_Pointer) return DoubleLinkedList_Pointer is
+      tmp : DoubleLinkedList_Pointer := list;
+   begin
+
+      while not is_empty(get_next(tmp)) loop
+         set_dll_cell(tmp, get_next(tmp));
+      end loop;
+
+      return tmp;
+
+   end get_last;
+
    function is_empty(list : IN DoubleLinkedList_Pointer) return Boolean is
    begin
       return list = null;
@@ -57,10 +81,10 @@ package body p_gen_doublelinkedlist is
       end if;
    end length;
 
-   function is_unique(elem : IN T_Value; list : IN DoubleLinkedList_Pointer) return Boolean is
-   begin
-      return find(elem, list) = null;
-   end is_unique;
+   --function is_unique(elem : IN T_Value; list : IN DoubleLinkedList_Pointer) return Boolean is
+   --begin
+   --   return find(elem, list) = null;
+   --end is_unique;
 
    procedure insert_at_start(elem : IN T_Value; list : IN OUT DoubleLinkedList_Pointer) is
       tmp : DoubleLinkedList_Pointer;

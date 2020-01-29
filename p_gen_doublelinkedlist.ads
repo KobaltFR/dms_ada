@@ -18,11 +18,14 @@ package p_gen_doublelinkedlist is
    function get_next(list : IN DoubleLinkedList_Pointer) return DoubleLinkedList_Pointer;
    procedure set_next(pointer : IN DoubleLinkedList_Pointer; list : IN OUT DoubleLinkedList_Pointer);
    procedure set_dll_cell(out_cell : OUT DoubleLinkedList_Pointer; in_cell : IN DoubleLinkedList_Pointer);
-
    function set_null_cell return DoubleLinkedList_Pointer;
+
+   function get_first(list : IN DoubleLinkedList_Pointer) return DoubleLinkedList_Pointer;
+   function get_last(list : IN DoubleLinkedList_Pointer) return DoubleLinkedList_Pointer;
+
    function is_empty(list : IN DoubleLinkedList_Pointer) return Boolean;
    function length(list : IN DoubleLinkedList_Pointer) return Natural;
-   function is_unique(elem : IN T_Value; list : IN DoubleLinkedList_Pointer) return Boolean;
+   --function is_unique(elem : IN T_Value; list : IN DoubleLinkedList_Pointer) return Boolean;
    procedure insert_at_start(elem : IN T_Value; list : IN OUT DoubleLinkedList_Pointer);
    procedure insert_at_end(elem : IN T_Value; list : IN OUT DoubleLinkedList_Pointer);
    procedure insert_after(elem : IN T_Value; delimiter : IN T_Value; list : IN OUT DoubleLinkedList_Pointer);

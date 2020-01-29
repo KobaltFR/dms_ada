@@ -16,24 +16,24 @@ use p_commandfuncs;
 procedure main_sgf is
    
    procedure commandMenu is
-       choice : unbounded_string;
+       choice : Positive;
    begin
        Put_Line("What do you want to do ? (Please enter the number of the command)");
        Put_Line("1. cd : change directory");
        Put_Line("2. pwd : print working directory");
-       Put_Line("3. ls : list files and directories");
+       Put_Line("3. ls (-r) : list files and directories (-r : recursively)");
        Put_Line("4. touch : create file");
        Put_Line("5. mkdir : create directory");
-       choice := To_Unbounded_String(Get_Line);
-       if (To_String(choice) = "cd") then
+       Get(choice);
+       if (choice = 1) then
            null; -- cd
-       elsif (To_String(choice) = "pwd") then
+       elsif (choice = 2) then
            null;-- pwd
-       elsif (To_String(choice) = "ls") then
+       elsif (choice = 3) then
            null;-- ls
-       elsif (To_String(choice) = "touch") then
+       elsif (choice = 4) then
            null;-- touch
-       elsif (To_String(choice) = "mkdir") then
+       elsif (choice = 5) then
            null;-- mk
        end if;
    end commandMenu;

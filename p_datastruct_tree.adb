@@ -143,13 +143,19 @@ package body p_datastruct_tree is
 
    procedure insert(path_to_node : IN Unbounded_String; data : IN Metadata; current_node : IN OUT Tree_Node_Pointer) is
       path_list : US_DLL.DoubleLinkedList_Pointer;
-      current_node_children : TN_DLL.DoubleLinkedList_Pointer;
+      node_name : Unbounded_String;
+      changed_node_children : TN_DLL.DoubleLinkedList_Pointer;
+      changed_node : Tree_Node_Pointer;
    begin
-      current_node_children := get_child_node(current_node);
-      path_list := split_command('\', path_to_node);
-      -- VERIFIER UNICITEE CHILD LIST
-      if US_DLL.length(path_list) = 1 then
-         alphabetical_insert(new Tree_Node'(US_DLL.get_value(path_list), data, current_node, set_null_cell), current_node_children);
+      path_list := split_command('/', path_to_node);
+      node_name := US_DLL.get_value(US_DLL.get_last(path_list));
+      US_DLL.delete(node_name, path_list);
+      changed_node := p_datastruct_tree.get_node(path_list, current_node);
+      changed_node_children := get_child_node(changed_node);
+      if is_unique(node_name, changed_node_children) then
+         alphabetical_insert(new Tree_Node'(node_name, data, current_node, set_null_cell), changed_node_children);
+      else
+         raise not_unique_element;
       end if;
    end insert;
 
@@ -184,6 +190,19 @@ package body p_datastruct_tree is
       return tmp;
    end find_child;
 
+   function is_unique(name : IN Unbounded_String; children : IN TN_DLL.DoubleLinkedList_Pointer) return Boolean is
+      tmp : TN_DLL.DoubleLinkedList_Pointer := children;
+      unique : Boolean := True;
+   begin
+      while not is_empty(tmp) and then unique loop
+         if name = get_node_name(get_value(tmp)) then
+            unique := False;
+         end if;
+         set_dll_cell(tmp, get_next(tmp));
+      end loop;
+      return unique;
+   end is_unique;
+
    function get_node(path_to_node : IN US_DLL.DoubleLinkedList_Pointer; current_node : IN Tree_Node_Pointer) return Tree_Node_Pointer is
       found_element : TN_DLL.DoubleLinkedList_Pointer;
    begin
@@ -191,19 +210,59 @@ package body p_datastruct_tree is
          found_element := find_child(US_DLL.get_value(path_to_node), current_node);
          if not TN_DLL.is_empty(found_element) then
             return get_node(US_DLL.get_next(path_to_node), get_value(found_element));
+         else
+            raise element_not_found;
          end if;
       end if;
       return null;
    end get_node;
 
-   procedure delete(path_to_node : IN Unbounded_String; current_node : IN OUT Tree_Node_Pointer) is
+   procedure delete(path_to_node : IN US_DLL.DoubleLinkedList_Pointer; current_node : IN OUT Tree_Node_Pointer) is
+      path_list : US_DLL.DoubleLinkedList_Pointer := path_to_node;
+      node_name : Unbounded_String;
+      changed_node : Tree_Node_Pointer;
+      changed_node_children : TN_DLL.DoubleLinkedList_Pointer;
+      found_element : TN_DLL.DoubleLinkedList_Pointer;
    begin
-      null;
+      node_name := US_DLL.get_value(US_DLL.get_last(path_list));
+      US_DLL.delete(node_name, path_list);
+      changed_node := p_datastruct_tree.get_node(path_list, current_node);
+      found_element := find_child(US_DLL.get_value(path_to_node), changed_node);
+      if not TN_DLL.is_empty(found_element) then
+         changed_node_children := get_child_node(changed_node);
+         TN_DLL.delete(get_value(found_element), changed_node_children);
+      else
+         raise element_not_found;
+      end if;
    end delete;
 
-   procedure display(current_node : IN Tree_Node_Pointer; space: IN Integer := 0) is
+   procedure display(current_node : IN Tree_Node_Pointer) is
+      procedure put_space(n : IN Natural) is
+      begin
+         for i in 1..n loop
+            Put(' ');
+         end loop;
+      end put_space;
+
+      current_node_children : TN_DLL.DoubleLinkedList_Pointer;
    begin
-      null;
+      if not is_empty(current_node) then
+         current_node_children := get_child_node(current_node);
+         Put_Line(print(current_node));
+         while not is_empty(current_node_children) loop
+            put_space(3);
+            display(get_value(current_node_children));
+            set_dll_cell(current_node_children, get_next(current_node_children));
+         end loop;
+      end if;
    end display;
+
+   procedure go_to_root(current_node : IN OUT Tree_Node_Pointer) is
+   begin
+      if not is_empty(current_node) then
+         set_tree_node(current_node, get_parent_node(current_node));
+         go_to_root(current_node);
+      end if;
+   end go_to_root;
 
 end p_datastruct_tree;
