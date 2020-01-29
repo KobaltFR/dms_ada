@@ -100,8 +100,11 @@ package body p_datastruct_tree is
       sc1 : Tree_Node_Pointer;
       sc2 : Tree_Node_Pointer;
       sc3 : Tree_Node_Pointer;
-      data, datac1, datac2, datac3 : Metadata;
+      scc1 : Tree_Node_Pointer;
+      scc2 : Tree_Node_Pointer;
+      data, datac1, datac2, datac3, datacc1, datacc2 : Metadata;
       child_list : TN_DLL.DoubleLinkedList_Pointer;
+      children_list : TN_DLL.DoubleLinkedList_Pointer;
       before : TN_DLL.DoubleLinkedList_Pointer;
    begin
 
@@ -123,7 +126,17 @@ package body p_datastruct_tree is
       set_file_extension(To_Unbounded_String(""), datac3);
       set_user_rights("drwx", datac3);
       set_size_on_disk(1, datac3);
-      sc3 := new Tree_Node'(To_Unbounded_String("b"), datac1, initalTree, set_null_cell);
+      sc3 := new Tree_Node'(To_Unbounded_String("b"), datac3, initalTree, set_null_cell);
+
+      set_file_extension(To_Unbounded_String(""), datacc1);
+      set_user_rights("drwx", datacc1);
+      set_size_on_disk(1, datacc1);
+      scc1 := new Tree_Node'(To_Unbounded_String("childb1"), datacc1, sc3, set_null_cell);
+
+      set_file_extension(To_Unbounded_String(""), datacc2);
+      set_user_rights("drwx", datacc2);
+      set_size_on_disk(1, datacc2);
+      scc2 := new Tree_Node'(To_Unbounded_String("childb2"), datacc2, sc3, set_null_cell);
 
       alphabetical_insert(sc1, child_list);
 
@@ -132,6 +145,12 @@ package body p_datastruct_tree is
       alphabetical_insert(sc2, child_list);
 
       alphabetical_insert(sc3, child_list);
+
+      alphabetical_insert(scc1, children_list);
+
+      alphabetical_insert(scc2, children_list);
+
+      set_child_node(children_list, sc3);
 
       return initalTree;
    end init;
@@ -236,7 +255,8 @@ package body p_datastruct_tree is
       end if;
    end delete;
 
-   procedure display(current_node : IN Tree_Node_Pointer) is
+   procedure display(current_node : IN Tree_Node_Pointer; spaces : IN Natural := 0) is
+
       procedure put_space(n : IN Natural) is
       begin
          for i in 1..n loop
@@ -245,16 +265,27 @@ package body p_datastruct_tree is
       end put_space;
 
       current_node_children : TN_DLL.DoubleLinkedList_Pointer;
+      nb_of_spaces : Natural := spaces;
+
    begin
+
       if not is_empty(current_node) then
-         current_node_children := get_child_node(current_node);
+
          Put_Line(print(current_node));
+         current_node_children := get_child_node(current_node);
+         nb_of_spaces := nb_of_spaces + 4;
+
          while not is_empty(current_node_children) loop
-            put_space(3);
-            display(get_value(current_node_children));
+
+            put_space(nb_of_spaces);
+            display(get_value(current_node_children), nb_of_spaces);
             set_dll_cell(current_node_children, get_next(current_node_children));
+
          end loop;
+
       end if;
+
+
    end display;
 
    procedure go_to_root(current_node : IN OUT Tree_Node_Pointer) is

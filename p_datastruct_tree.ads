@@ -30,7 +30,7 @@ package p_datastruct_tree is
    procedure insert(path_to_node : IN Unbounded_String; data : IN Metadata; current_node : IN OUT Tree_Node_Pointer);
    function get_node(path_to_node : IN US_DLL.DoubleLinkedList_Pointer; current_node : IN Tree_Node_Pointer) return Tree_Node_Pointer;
    procedure delete(path_to_node : IN US_DLL.DoubleLinkedList_Pointer; current_node : IN OUT Tree_Node_Pointer);
-   procedure display(current_node : IN Tree_Node_Pointer);
+   procedure display(current_node : IN Tree_Node_Pointer; spaces : IN Natural := 0);
    function find_child(element : IN Unbounded_String; current_node : IN Tree_Node_Pointer) return TN_DLL.DoubleLinkedList_Pointer;
    function is_unique(name : IN Unbounded_String; children : IN TN_DLL.DoubleLinkedList_Pointer) return Boolean;
    procedure go_to_root(current_node : IN OUT Tree_Node_Pointer);
