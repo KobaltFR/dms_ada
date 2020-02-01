@@ -1,5 +1,5 @@
-with Ada.Text_IO, Ada.Strings.Unbounded, p_datastruct_tree;
-use Ada.Text_IO, Ada.Strings.Unbounded, p_datastruct_tree;
+with Ada.Text_IO, Ada.Strings.Unbounded, p_datastruct_tree, p_dms;
+use Ada.Text_IO, Ada.Strings.Unbounded, p_datastruct_tree, p_dms;
 
 procedure main_test_tree is
 
@@ -7,7 +7,9 @@ procedure main_test_tree is
 
 begin
 
-   tree := p_datastruct_tree.init;
+   tree := createDMS;
+
+   init(tree);
 
    p_datastruct_tree.display(tree);
 

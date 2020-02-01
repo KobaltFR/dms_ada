@@ -25,7 +25,7 @@ package p_datastruct_tree is
    procedure set_child_node(child_list : IN TN_DLL.DoubleLinkedList_Pointer; node : IN OUT Tree_Node_Pointer);
    procedure set_tree_node(out_node : OUT Tree_Node_Pointer; in_node : IN Tree_Node_Pointer);
 
-   function init return Tree_Node_Pointer;
+   function init(name : IN Unbounded_String; data : IN Metadata; parent : IN Tree_Node_Pointer; children : IN TN_DLL.DoubleLinkedList_Pointer) return Tree_Node_Pointer;
    function is_empty(node : IN Tree_Node_Pointer) return Boolean;
    procedure insert(path_to_node : IN Unbounded_String; data : IN Metadata; current_node : IN OUT Tree_Node_Pointer);
    function get_node(path_to_node : IN US_DLL.DoubleLinkedList_Pointer; current_node : IN Tree_Node_Pointer) return Tree_Node_Pointer;
@@ -35,6 +35,9 @@ package p_datastruct_tree is
    function is_unique(name : IN Unbounded_String; children : IN TN_DLL.DoubleLinkedList_Pointer) return Boolean;
    procedure go_to_root(current_node : IN OUT Tree_Node_Pointer);
 
+   function get_node_for_alphabetical_insert(name : IN Unbounded_String; dll : IN TN_DLL.DoubleLinkedList_Pointer) return TN_DLL.DoubleLinkedList_Pointer;
+   procedure alphabetical_insert(node_to_insert : IN Tree_Node_Pointer; dll : IN OUT TN_DLL.DoubleLinkedList_Pointer);
+
 private
 
    type Tree_Node is record
@@ -43,8 +46,5 @@ private
       parent_node : Tree_Node_Pointer;
       child_node : TN_DLL.DoubleLinkedList_Pointer;
    end record;
-
-   function get_node_for_alphabetical_insert(name : IN Unbounded_String; dll : IN TN_DLL.DoubleLinkedList_Pointer) return TN_DLL.DoubleLinkedList_Pointer;
-   procedure alphabetical_insert(node_to_insert : IN Tree_Node_Pointer; dll : IN OUT TN_DLL.DoubleLinkedList_Pointer);
 
 end p_datastruct_tree;

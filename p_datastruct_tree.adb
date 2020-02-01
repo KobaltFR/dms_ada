@@ -95,64 +95,9 @@ package body p_datastruct_tree is
       end if;
    end alphabetical_insert;
 
-   function init return Tree_Node_Pointer is
-      initalTree : Tree_Node_Pointer;
-      sc1 : Tree_Node_Pointer;
-      sc2 : Tree_Node_Pointer;
-      sc3 : Tree_Node_Pointer;
-      scc1 : Tree_Node_Pointer;
-      scc2 : Tree_Node_Pointer;
-      data, datac1, datac2, datac3, datacc1, datacc2 : Metadata;
-      child_list : TN_DLL.DoubleLinkedList_Pointer;
-      children_list : TN_DLL.DoubleLinkedList_Pointer;
-      before : TN_DLL.DoubleLinkedList_Pointer;
+   function init(name : IN Unbounded_String; data : IN Metadata; parent : IN Tree_Node_Pointer; children : IN TN_DLL.DoubleLinkedList_Pointer) return Tree_Node_Pointer is
    begin
-
-      set_file_extension(To_Unbounded_String(""), data);
-      set_user_rights("drwx", data);
-      set_size_on_disk(1, data);
-      initalTree := new Tree_Node'(To_Unbounded_String("\"), data, null, set_null_cell);
-
-      set_file_extension(To_Unbounded_String(""), datac1);
-      set_user_rights("drwx", datac1);
-      set_size_on_disk(1, datac1);
-      sc1 := new Tree_Node'(To_Unbounded_String("a"), datac1, initalTree, set_null_cell);
-
-      set_file_extension(To_Unbounded_String(""), datac2);
-      set_user_rights("drwx", datac2);
-      set_size_on_disk(1, datac2);
-      sc2 := new Tree_Node'(To_Unbounded_String("d"), datac2, initalTree, set_null_cell);
-
-      set_file_extension(To_Unbounded_String(""), datac3);
-      set_user_rights("drwx", datac3);
-      set_size_on_disk(1, datac3);
-      sc3 := new Tree_Node'(To_Unbounded_String("b"), datac3, initalTree, set_null_cell);
-
-      set_file_extension(To_Unbounded_String(""), datacc1);
-      set_user_rights("drwx", datacc1);
-      set_size_on_disk(1, datacc1);
-      scc1 := new Tree_Node'(To_Unbounded_String("childb1"), datacc1, sc3, set_null_cell);
-
-      set_file_extension(To_Unbounded_String(""), datacc2);
-      set_user_rights("drwx", datacc2);
-      set_size_on_disk(1, datacc2);
-      scc2 := new Tree_Node'(To_Unbounded_String("childb2"), datacc2, sc3, set_null_cell);
-
-      alphabetical_insert(sc1, child_list);
-
-      set_child_node(child_list, initalTree);
-
-      alphabetical_insert(sc2, child_list);
-
-      alphabetical_insert(sc3, child_list);
-
-      alphabetical_insert(scc1, children_list);
-
-      alphabetical_insert(scc2, children_list);
-
-      set_child_node(children_list, sc3);
-
-      return initalTree;
+      return new Tree_Node'(name, data, parent, children);
    end init;
 
    function is_empty(node : IN Tree_Node_Pointer) return Boolean is
@@ -266,12 +211,18 @@ package body p_datastruct_tree is
 
       current_node_children : TN_DLL.DoubleLinkedList_Pointer;
       nb_of_spaces : Natural := spaces;
+      folder_character : Character;
 
    begin
 
       if not is_empty(current_node) then
 
-         Put_Line(print(current_node));
+         if get_user_rights(get_metadata(current_node))(1) = 'd' and then get_node_name(current_node) /= To_Unbounded_String("/") then
+            folder_character := '/';
+         else
+            folder_character := ' ';
+         end if;
+         Put_Line(print(current_node) & folder_character);
          current_node_children := get_child_node(current_node);
          nb_of_spaces := nb_of_spaces + 4;
 
@@ -284,7 +235,6 @@ package body p_datastruct_tree is
          end loop;
 
       end if;
-
 
    end display;
 
