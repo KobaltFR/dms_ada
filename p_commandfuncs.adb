@@ -38,7 +38,7 @@ package body p_commandfuncs is
       return args_list;
    end split_command;
 
-   procedure interpret_command (argsList : in US_DLL.DoubleLinkedList_Pointer; current_directory : in out Tree_Node_Pointer) is
+   procedure interpreter (argsList : in US_DLL.DoubleLinkedList_Pointer; current_directory : in out Tree_Node_Pointer) is
       cmd, path, size, option : Unbounded_String;
       nat_size, list_size : Natural;
    begin
@@ -128,6 +128,6 @@ package body p_commandfuncs is
       elsif cmd /= To_Unbounded_String("exit") then
          Put_Line("Unrecognized command, please enter a valid command...");
       end if;
-   end interpret_command;
+   end interpreter;
 
 end p_commandfuncs;

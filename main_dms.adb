@@ -16,7 +16,7 @@ procedure main_dms is
          Put ("[" & To_String(get_node_name(file_system)) & "] > ");
          command  := To_Unbounded_String (Get_Line);
          argsList := split_command (' ', command);
-         interpret_command(argsList, file_system);
+         interpreter(argsList, file_system);
          exit when To_String (command) = "exit";
       end loop;
    end command_prompt;

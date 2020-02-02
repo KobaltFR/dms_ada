@@ -13,7 +13,6 @@ package body p_metadata is
       data.fileExtension := extension;
    end set_file_extension;
 
-
    function get_user_rights(data : IN Metadata) return String is
    begin
       return data.userRights;
@@ -23,7 +22,6 @@ package body p_metadata is
    begin
       data.userRights := rights;
    end set_user_rights;
-
 
    function get_size_on_disk(data : IN Metadata) return Integer is
    begin
