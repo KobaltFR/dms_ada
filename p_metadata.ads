@@ -12,7 +12,9 @@ package p_metadata is
    procedure set_user_rights(rights : IN String; data : IN OUT Metadata);
 
    function get_size_on_disk(data : IN Metadata) return Integer;
-   procedure set_size_on_disk(size : IN Integer; data : IN OUT Metadata);
+   procedure set_size_on_disk(size : IN Natural; data : IN OUT Metadata);
+
+   function isDirectory(data : IN Metadata) return Boolean;
 
 private
 
@@ -21,7 +23,7 @@ private
    type Metadata is record
       fileExtension : Unbounded_String;
       userRights : String(1..MAX_RIGHTS_LENGTH);
-      sizeOnDisk : Integer;
+      sizeOnDisk : Natural;
    end record;
 
 end p_metadata;

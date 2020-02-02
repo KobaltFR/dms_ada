@@ -1,16 +1,31 @@
-with Ada.Strings.unbounded, p_datastruct_tree;
-use Ada.Strings.unbounded, p_datastruct_tree;
+with Ada.Strings.Unbounded, p_datastruct_tree;
+use Ada.Strings.Unbounded, p_datastruct_tree;
 
-package P_DMS is
+package p_dms is
 
-    function createDMS return Tree_Node_Pointer;
-    procedure init(tree_root : IN OUT Tree_Node_Pointer);
-    procedure pwd(current_directory : IN Tree_Node_Pointer);
-    function touch(path : IN Unbounded_String) return Tree_Node_Pointer;
-    procedure vim(path : IN OUT Unbounded_String);
-    function mkdir(path : IN Unbounded_String) return Tree_Node_Pointer;
-    procedure cd(path : IN Unbounded_String);
-    procedure ls(path : IN Unbounded_String);
-    
+   MISSING_ARGUMENTS : exception;
+   MISSING_NODE : exception;
+   ELEMENT_NOT_FILE : exception;
+   UNKNOWN_OPTION : exception;
 
-end P_DMS;
+   function createDMS return Tree_Node_Pointer;
+   procedure init (tree_root : in out Tree_Node_Pointer);
+   procedure display_path (path_dll : in US_DLL.DoubleLinkedList_Pointer);
+   procedure pwd (current_directory : in Tree_Node_Pointer);
+   procedure touch
+     (path : in Unbounded_String; current_directory : in Tree_Node_Pointer);
+   procedure vim
+     (path : in Unbounded_String; new_size : in Natural; current_directory : in Tree_Node_Pointer);
+   procedure mkdir
+     (path : in Unbounded_String; current_directory : in Tree_Node_Pointer);
+   procedure cd
+     (path              : in Unbounded_String;
+      current_directory : in out Tree_Node_Pointer);
+   procedure cd_parent
+     (path : in Unbounded_String; name : out Unbounded_String; current_directory : in out Tree_Node_Pointer);
+   procedure ls
+     (current_directory : in Tree_Node_Pointer;
+      path              : in Unbounded_String := To_Unbounded_String ("");
+      option            : in Unbounded_String := To_Unbounded_String (""));
+
+end p_dms;

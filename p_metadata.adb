@@ -30,9 +30,14 @@ package body p_metadata is
       return data.sizeOnDisk;
    end get_size_on_disk;
 
-   procedure set_size_on_disk(size : IN Integer; data : IN OUT Metadata) is
+   procedure set_size_on_disk(size : IN Natural; data : IN OUT Metadata) is
    begin
       data.sizeOnDisk := size;
    end set_size_on_disk;
+
+   function isDirectory(data : IN Metadata) return Boolean is
+   begin
+      return data.userRights(1) = 'd';
+   end isDirectory;
 
 end p_metadata;

@@ -1,6 +1,6 @@
 project Projet_ADA is
 
-   for Main use ("main_test_tree.adb");
+   for Main use ("main_dms.adb");
 
 end Projet_ADA;
 

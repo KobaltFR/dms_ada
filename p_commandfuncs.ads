@@ -1,11 +1,12 @@
-with Ada.Strings.unbounded, Ada.Text_IO.Unbounded_IO, p_gen_doublelinkedlist;
-use Ada.Strings.unbounded, Ada.Text_IO.Unbounded_IO;
+with Ada.Strings.Unbounded, Ada.Text_IO.Unbounded_IO, p_datastruct_tree, p_gen_doublelinkedlist;
+use Ada.Strings.Unbounded, Ada.Text_IO.Unbounded_IO, p_datastruct_tree;
 
 package p_commandfuncs is
 
-   package US_DLL is new p_gen_doublelinkedlist(T_Value => Unbounded_String, "=" => "=", image => To_String);
-   use US_DLL;
+   function split_command
+     (splitter : in Character; command : in Unbounded_String)
+      return US_DLL.DoubleLinkedList_Pointer;
 
-   function split_command(splitter : IN Character; command : IN unbounded_string) return DoubleLinkedList_Pointer;
+   procedure interpret_command (argsList : in US_DLL.DoubleLinkedList_Pointer; current_directory : in out Tree_Node_Pointer);
 
 end p_commandfuncs;
