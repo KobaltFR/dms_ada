@@ -128,6 +128,6 @@ D'un point de vue personnel, ce projet m'a permis de m'appercevoir que je gérai
 - Conception : ~10h
 - Implantation : ~35h
 - Mise au point : ~10h
-- Rapport : ~5h
+- Rapport & Manuel d'utilisateur : ~5h
 
 </div>
