@@ -1,7 +1,6 @@
 <?xml version="1.0"?>
 <Locations >
-  <Project>
-    <vfs_file>D:\GNAT\Projects\dms_ada\projet_ada.gpr</vfs_file>
+  <Project >
     <file_marker column=" 1" line=" 1" >
       <vfs_project>D:\GNAT\Projects\dms_ada\projet_ada.gpr</vfs_project>
       <vfs_file>D:\GNAT\Projects\dms_ada\p_commandfuncs.ads</vfs_file>
@@ -18,9 +17,17 @@
       <vfs_project>D:\GNAT\Projects\dms_ada\projet_ada.gpr</vfs_project>
       <vfs_file>D:\GNAT\Projects\dms_ada\p_gen_doublelinkedlist.ads</vfs_file>
     </file_marker>
-    <file_marker current="true" column=" 1" line=" 1" >
+    <file_marker column=" 1" line=" 1" >
       <vfs_project>D:\GNAT\Projects\dms_ada\projet_ada.gpr</vfs_project>
       <vfs_file>D:\GNAT\Projects\dms_ada\p_metadata.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1" >
+      <vfs_project>D:\GNAT\Projects\dms_ada\projet_ada.gpr</vfs_project>
+      <vfs_file>D:\GNAT\Projects\dms_ada\p_datastruct_tree.adb</vfs_file>
+    </file_marker>
+    <file_marker current="true" column=" 17" line=" 167" >
+      <vfs_project>D:\GNAT\Projects\dms_ada\projet_ada.gpr</vfs_project>
+      <vfs_file>D:\GNAT\Projects\dms_ada\p_datastruct_tree.adb</vfs_file>
     </file_marker>
   </Project>
   <Project >

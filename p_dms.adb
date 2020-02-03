@@ -9,8 +9,7 @@ package body p_dms is
       set_file_extension (To_Unbounded_String (""), data);
       set_user_rights ("drwx", data);
       set_size_on_disk (1, data);
-      return init
-          (To_Unbounded_String ("/"), data, null, TN_DLL.set_null_cell);
+      return init (To_Unbounded_String ("/"), data, null, TN_DLL.set_null_cell);
    end createDMS;
 
 
@@ -64,11 +63,15 @@ package body p_dms is
       tmp_dll       : US_DLL.DoubleLinkedList_Pointer := path_dll;
       absolute_path : Unbounded_String;
    begin
+      -- Go to the start of the list
       US_DLL.goto_first_element (tmp_dll);
       while not US_DLL.is_empty (tmp_dll) loop
+         -- If the current value or the previous value is not '/'
          if not (US_DLL.get_value (tmp_dll) = To_Unbounded_String ("/") or else US_DLL.get_value (US_DLL.get_previous (tmp_dll)) = To_Unbounded_String ("/")) then
+            --Add the '/' character to the Unbounded String
             Append (absolute_path, '/');
          end if;
+         --Add the current value to the Unbounded String
          Append (absolute_path, US_DLL.get_value (tmp_dll));
          US_DLL.set_dll_cell (tmp_dll, US_DLL.get_next (tmp_dll));
       end loop;
@@ -95,16 +98,24 @@ package body p_dms is
       file_extension    : Unbounded_String;
       file_list         : US_DLL.DoubleLinkedList_Pointer; --List containing file name and file extension
    begin
+      --If the path is empty
       if path = To_Unbounded_String ("") then
          raise MISSING_ARGUMENTS;
+      -- If the path starts with a '/', then go to the root directory
       elsif Element (path, 1) = '/' then
          goto_root (changed_directory);
       end if;
+      --Split the input path using the '/' char
       split_path := split_command ('/', path);
-      file_list     := split_command ('.', US_DLL.get_last (split_path));
+      --This part adds the file's extension to its metadata
+      --Split the file name using the '.' char
+      file_list := split_command ('.', US_DLL.get_last (split_path));
+      --If there is not file extension
       if US_DLL.length (file_list) = 1 then
+         --Add an empty string to the metadata
          file_extension := To_Unbounded_String ("");
       else
+         --Add the second element of the list to the metadata
          file_extension := US_DLL.get_last (file_list);
       end if;
       set_file_extension (file_extension, data);
@@ -121,15 +132,19 @@ package body p_dms is
       file_node         : Tree_Node_Pointer;
       file_data         : Metadata;
    begin
+      --If the path is empty
       if path = To_Unbounded_String ("") then
          raise MISSING_ARGUMENTS;
       end if;
+      --Change directory to the parent directory of the file
       cd_parent(path, file_name, changed_directory);
       file := find_child(file_name, changed_directory);
       file_node := TN_DLL.get_value(file);
       file_data := get_metadata(file_node);
+      --If the file doesn't exist
       if TN_DLL.is_empty(file) then
          raise MISSING_NODE;
+      --If the node is a directory and not a file
       elsif isDirectory(file_data) then
          raise ELEMENT_NOT_FILE;
       end if;
@@ -143,14 +158,17 @@ package body p_dms is
       split_path     : US_DLL.DoubleLinkedList_Pointer;
       data              : Metadata;
    begin
+      --If the path is empty
       if path = To_Unbounded_String ("") then
          raise MISSING_ARGUMENTS;
+      -- If the path starts with a '/', then go to the root directory
       elsif Element (path, 1) = '/' then
          goto_root (changed_directory);
       end if;
       set_file_extension (To_Unbounded_String (""), data);
       set_user_rights ("drwx", data);
       set_size_on_disk (1, data);
+      --Split the input path using the '/' char
       split_path := split_command ('/', path);
       insert (split_path, data, changed_directory);
    end mkdir;
@@ -159,11 +177,15 @@ package body p_dms is
    procedure cd (path : in Unbounded_String; current_directory : in out Tree_Node_Pointer) is
       split_path : US_DLL.DoubleLinkedList_Pointer;
    begin
+      --If the path is empty
       if path = To_Unbounded_String("") then
+         -- Do nothing, doesn't matter for cd
          null;
+      -- If the path starts with a '/', then go to the root directory
       elsif Element (path, 1) = '/' then
          goto_root (current_directory);
       end if;
+      --Split the input path using the '/' char
       split_path := split_command ('/', path);
       goto_node (split_path, current_directory);
    end cd;
@@ -171,11 +193,15 @@ package body p_dms is
    procedure cd_parent (path : in Unbounded_String; name : out Unbounded_String; current_directory : in out Tree_Node_Pointer) is
       split_path : US_DLL.DoubleLinkedList_Pointer;
    begin
+      --If the path is empty
       if path = To_Unbounded_String("") then
+         -- Do nothing, doesn't matter for cd
          null;
+      -- If the path starts with a '/', then go to the root directory
       elsif Element (path, 1) = '/' then
          goto_root (current_directory);
       end if;
+      --Split the input path using the '/' char
       split_path := split_command ('/', path);
       US_DLL.get_and_delete_last(split_path, name);
       goto_node (split_path, current_directory);
@@ -193,6 +219,7 @@ package body p_dms is
          recursive := True;
       elsif option = To_Unbounded_String("-l") then
          details := True;
+      --If options starts with '-' (so is really an unkown option)
       elsif option /= To_Unbounded_String("") and then Element(option, 1) = '-' then
          raise UNKNOWN_OPTION;
       end if;

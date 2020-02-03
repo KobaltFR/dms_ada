@@ -52,6 +52,7 @@ package body p_datastruct_tree is
       node_dll : TN_DLL.DoubleLinkedList_Pointer;
    begin
       node_dll := node.child_node;
+      -- Move the pointer to the start of the list
       goto_first_element(node_dll);
       return node_dll;
    end get_child_node;
@@ -69,27 +70,29 @@ package body p_datastruct_tree is
 
 
 
-   --Returns null if you need to add at the start, or the privous element of the location you need to insert at.
    function get_node_for_alphabetical_insert (name : in Unbounded_String; dll : in TN_DLL.DoubleLinkedList_Pointer) return TN_DLL.DoubleLinkedList_Pointer is
       tmp        : TN_DLL.DoubleLinkedList_Pointer := dll;
       spot       : TN_DLL.DoubleLinkedList_Pointer := set_null_cell;
       found_spot : Boolean                         := False;
    begin
+      -- If the list is not empty and we didn't find a spot to insert to
       while (not is_empty (tmp)) and then (not found_spot) loop
          if get_node_name (get_value (tmp)) > name then
             found_spot := True;
          elsif get_node_name (get_value (tmp)) < name then
-            if is_empty (get_next (tmp)) then
-               set_dll_cell (out_cell => spot, in_cell => tmp);
-               found_spot := True;
-            elsif get_node_name (get_value (get_next (tmp))) > name then
+            -- If the current element is the last of the list
+            -- OR If the current element has a lower name than ours, but the next element has a higher name than ours
+            if is_empty (get_next (tmp)) or else get_node_name (get_value (get_next (tmp))) > name then
+               -- This element is our spot to insert after
                set_dll_cell (out_cell => spot, in_cell => tmp);
                found_spot := True;
             else
+               -- Go to the next element of the list
                set_dll_cell (tmp, get_next (tmp));
             end if;
          end if;
       end loop;
+      -- If the list was empty, or the names of the list were always higher than our name, return null
       return spot;
    end get_node_for_alphabetical_insert;
 
@@ -97,8 +100,7 @@ package body p_datastruct_tree is
    procedure alphabetical_insert (node_to_insert : in Tree_Node_Pointer; dll : in out TN_DLL.DoubleLinkedList_Pointer) is
       insert_after_node : TN_DLL.DoubleLinkedList_Pointer;
    begin
-      insert_after_node :=
-        get_node_for_alphabetical_insert (get_node_name (node_to_insert), dll);
+      insert_after_node := get_node_for_alphabetical_insert (get_node_name (node_to_insert), dll);
       if is_empty (insert_after_node) then
          insert_at_start (node_to_insert, dll);
       else
@@ -141,6 +143,7 @@ package body p_datastruct_tree is
       if TN_DLL.is_empty (tmp) then
          return set_null_cell;
       end if;
+      -- Go through the first half of the list to find the element
       while (not is_empty (tmp)) and then (not element_found) loop
          if get_node_name (get_value (tmp)) = element_name then
             element_found := True;
@@ -148,6 +151,7 @@ package body p_datastruct_tree is
             set_dll_cell (tmp, get_next (tmp));
          end if;
       end loop;
+      -- If the element is not already found, go through the other half
       if (not element_found) then
          tmp := get_child_node (current_node);
          while (not is_empty (tmp)) and then (not element_found) loop
@@ -157,6 +161,10 @@ package body p_datastruct_tree is
                set_dll_cell (tmp, get_previous (tmp));
             end if;
          end loop;
+      end if;
+      -- If the element wasn't found, return null
+      if not element_found then
+         tmp := set_null_cell;
       end if;
       return tmp;
    end find_child;
@@ -178,19 +186,26 @@ package body p_datastruct_tree is
       parent_node : Tree_Node_Pointer;
    begin
       while not US_DLL.is_empty(tmp_path) loop
+         -- If the current value of the path list is "." or "", do nothing
          if US_DLL.get_value (tmp_path) = To_Unbounded_String(".") or else US_DLL.get_value (tmp_path) = To_Unbounded_String("") then
             null;
+         -- If the current value of the path list is ".."
          elsif US_DLL.get_value (tmp_path) = To_Unbounded_String("..") then
             parent_node := get_parent_node(current_node);
+            -- If the parent node of the current node is not set (current node = root), do nothing
             if parent_node = null then
                null;
             else
+               -- Else change node to the parent node of the current node
                current_node := parent_node;
             end if;
          else
             found_element := find_child (US_DLL.get_value (tmp_path), current_node);
+            -- If the current value of the path list exists
             if not TN_DLL.is_empty (found_element) then
-               if get_user_rights(get_metadata(get_value(found_element)))(1) = 'd' then
+               -- If the current value of the path list is a directory
+               if isDirectory(get_metadata(get_value(found_element))) then
+                  -- change node to the current value of the path list
                   current_node := TN_DLL.get_value(found_element);
                else
                   raise NOT_FOLDER_ELEMENT;
@@ -199,6 +214,7 @@ package body p_datastruct_tree is
                raise INEXISTANT_ELEMENT;
             end if;
          end if;
+         -- Go to the next element of the path list
          US_DLL.set_dll_cell(tmp_path, US_DLL.get_next(tmp_path));
       end loop;
    end goto_node;
@@ -215,10 +231,11 @@ package body p_datastruct_tree is
          goto_node (path_list, changed_node);
       end if;
       changed_node_children := get_child_node (changed_node);
+      -- If the name of the new node is not already used
       if is_unique (node_name, changed_node_children) then
-         alphabetical_insert
-           (init(node_name, data, changed_node, set_null_cell),
-            changed_node_children);
+         -- Insert the new node alphabetically
+         alphabetical_insert (init(node_name, data, changed_node, set_null_cell), changed_node_children);
+         -- Set the child node of the current node (needed if the new node was the first child of the current node children list)
          set_child_node (changed_node_children, changed_node);
       else
          raise NOT_UNIQUE_ELEMENT;
@@ -238,6 +255,7 @@ package body p_datastruct_tree is
          goto_node (path_list, changed_node);
       end if;
       found_element := find_child (US_DLL.get_value (path_to_node), changed_node);
+      -- If the element you wish to delete exist
       if not TN_DLL.is_empty (found_element) then
          changed_node_children := get_child_node (changed_node);
          TN_DLL.delete (get_value (found_element), changed_node_children);
@@ -259,6 +277,7 @@ package body p_datastruct_tree is
          end loop;
       end put_space;
 
+      --Return '/' if the current_node is a folder, so we can put it at the end of the name when displaying
       function folder_char (current_node : in Tree_Node_Pointer) return Character is
          folder_character      : Character;
       begin
@@ -272,6 +291,7 @@ package body p_datastruct_tree is
          return folder_character;
       end folder_char;
 
+      -- Displays the infomation of the current node at the start of the line
       procedure put_info (current_node : in Tree_Node_Pointer) is
       begin
          Put(get_user_rights(get_metadata(current_node)));
@@ -284,21 +304,26 @@ package body p_datastruct_tree is
 
    begin
       if not is_empty (current_node) then
+         --Displays the name of the current node
          Put_Line (print (current_node) & folder_char(current_node));
+         -- Get current node's children
          current_node_children := get_child_node (current_node);
          nb_of_spaces          := nb_of_spaces + 4;
          while not is_empty (current_node_children) loop
+            --Displays the increment
             put_space (nb_of_spaces);
             if recusively then
+               --Recursive call of the display procedure on each child
                display (get_value (current_node_children), recusively, False, nb_of_spaces);
             else
                if detailed then
+                  -- Diplays the current node information
                   put_info(get_value (current_node_children));
                end if;
+               --Displays each child name
                Put_Line (print (get_value (current_node_children)) & folder_char(get_value (current_node_children)));
             end if;
-            set_dll_cell
-              (current_node_children, get_next (current_node_children));
+            set_dll_cell (current_node_children, get_next (current_node_children));
          end loop;
       end if;
    end display;

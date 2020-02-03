@@ -61,15 +61,18 @@ package body p_gen_doublelinkedlist is
    procedure get_and_delete_last (list : in out DoubleLinkedList_Pointer; last : out T_Value) is
       tmp : DoubleLinkedList_Pointer;
    begin
+      --Go to the start of the list
       goto_first_element(list);
       tmp := list;
       while not is_empty(get_next(tmp)) loop
          set_dll_cell(tmp, get_next(tmp));
       end loop;
       last := tmp.value;
+      --If the list contains only one element, then the list is now empty (deletions of the element)
       if length(list) = 1 then
          list := null;
       else
+      --Else we delete the last element
          tmp.previous.next := null;
          tmp.previous := null;
       end if;
@@ -142,6 +145,7 @@ package body p_gen_doublelinkedlist is
       if is_empty (list) then
          return null;
       end if;
+      -- Go through the first half of the list to find the element
       while not element_found and then tmp /= null loop
          if tmp.value = elem then
             element_found := True;
@@ -149,6 +153,7 @@ package body p_gen_doublelinkedlist is
             tmp := tmp.next;
          end if;
       end loop;
+      -- If the element is not already found, go through the other half
       if not element_found then
          tmp := list;
          while not element_found and then tmp /= null loop
@@ -159,6 +164,7 @@ package body p_gen_doublelinkedlist is
             end if;
          end loop;
       end if;
+      -- If the element wasn't found, return null
       if not element_found then
          tmp := null;
       end if;

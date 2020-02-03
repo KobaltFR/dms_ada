@@ -15,13 +15,15 @@ package body p_commandfuncs is
       splitter_found : Boolean := False;
    begin
       lcmd := Length (command);
+      -- From 1 to the length of the Unbounded String
       for i in 1 .. lcmd loop
-         if Element (command, i) = splitter or
-           (splitter_found and then i = lcmd)
-         then
+         -- If the current char is equals to the splitter char, or if we're at the end of the string and we previously found a splitter
+         if Element (command, i) = splitter or (splitter_found and then i = lcmd) then
             splitter_found := True;
+            -- If no splitter was found before
             if high = 0 then
                high := i;
+            -- If we're at the end of the string
             elsif i = lcmd then
                low  := high;
                high := lcmd + 1;
@@ -29,9 +31,13 @@ package body p_commandfuncs is
                low  := high;
                high := i;
             end if;
+            -- Slice the string using low's and high's values
             Unbounded_Slice (command, argument, low + 1, high - 1);
+            -- Add this slice to the argsList
             US_DLL.insert_at_end (argument, args_list);
+         -- If we're at the end and we didn't find any splitter chars
          elsif not splitter_found and then i = lcmd then
+            -- Add the whole Unbounded String to the argsList
             US_DLL.insert_at_end (command, args_list);
          end if;
       end loop;
